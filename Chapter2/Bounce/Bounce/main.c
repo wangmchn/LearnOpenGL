@@ -52,25 +52,40 @@ void ChangeSize(GLsizei w, GLsizei h) {
     // 裁剪超出正方形的部分
     aspectRatio = (GLfloat)w / (GLfloat)h;
     // 以小的边长为基础，计算出窗口比例的宽高以保持物体大小随窗口拉伸变大
-    GLfloat horizontal = width / 2;
-    GLfloat vertical   = height / 2;
+    GLfloat rwidth, rheight;
     // glOrtho 相当于将图元绘制在投影面积上，后缩放到当前视口上
     // 例如视口大小为 (100,100) , 投影为 (-50, 50, -50, 50, -1.0, 1.0) 物体为正常大小
     // 若为 -100, 100, 则将缩小2倍
     // 因为以原始的宽高为基础计算投影比例可以使物块随窗口放大缩小
-    if (aspectRatio >= (horizontal/vertical)) {
-        glOrtho(-vertical * aspectRatio, vertical * aspectRatio, -vertical, vertical, 1.0, -1.0);
+    if (aspectRatio >= (width/height)) {
+        rwidth  = height / 2 * aspectRatio;
+        rheight = height / 2;
     } else {
-        glOrtho(-horizontal, horizontal, -horizontal / aspectRatio, horizontal / aspectRatio, 1.0, -1.0);
+        rwidth  = width / 2;
+        rheight = width / 2 / aspectRatio;
     }
-    
+    glOrtho(-rwidth, rwidth, -rheight, rheight, 1.0, -1.0);
+
     // (2)
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    
     // 暂时不明 (1) 和 (2) 的作用
     // glMatrixMode 对接下来要做什么进行声明，也就是在要做下一步之前告诉计算机我要对“什么”进行操作了
     // GL_PROJECTION 投影, GL_MODELVIEW 模型视图, GL_TEXTURE 纹理;
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    // 检查边界，防止物体反弹时窗口变小导致物体出现在视口之外
+    if (x - xstep + rsize > rwidth) {
+        x = rwidth - rsize - 1;
+    } else if (x < - (rwidth + xstep)) {
+        x = -rwidth - 1;
+    }
+    
+    if (y - ystep + rsize > rheight) {
+        y = rheight - rsize - 1;
+    } else if (y < - (rheight + ystep)) {
+        y = -rheight - 1;
+    }
+    
 }
 
 void TimerFunction(int value) {
