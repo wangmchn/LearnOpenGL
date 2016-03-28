@@ -1,2 +1,2 @@
 # LearnOpenGL
-Sample code of OpenGL SuperBible
+Sample codes of OpenGL SuperBible
