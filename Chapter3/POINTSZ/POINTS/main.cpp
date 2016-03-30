@@ -21,6 +21,12 @@ void SetupRenderContext() {
 
 void RenderScence() {
     GLfloat x, y, z, angle;
+    GLfloat curSize = 1.0;
+    GLfloat step = 1.0;
+    GLfloat sizes[2] = {0, 0};
+    // 向系统查询一个状态变量的当前值
+    glGetFloatv(GL_POINT_SIZE_RANGE, sizes);
+    glGetFloatv(GL_POINT_SIZE_GRANULARITY, &step);
     
     glClear(GL_COLOR_BUFFER_BIT);
     // 保存矩阵状态
@@ -33,11 +39,14 @@ void RenderScence() {
     for (angle = 0.0f; angle < 3 * M_PI * 2; angle += 0.1f) {
         x = 50.0f * sin(angle);
         y = 50.0f * cos(angle);
+        
         // 画点
+        glPointSize(curSize);
         glBegin(GL_POINTS);
         glVertex3f(x, y, z);
         glEnd();
         z += 0.5f;
+        curSize += step;
     }
     // 返回到保存的矩阵状态
     glPopMatrix();
