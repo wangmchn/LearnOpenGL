@@ -73,7 +73,7 @@ void ChangeSize(GLsizei w, GLsizei h) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    // 检查边界，防止物体反弹时窗口变小导致物体出现在视口之外
+    // 检查边界，防止物体反弹时窗口变小导致物体出现在视口之外;
     if (x - xstep + rsize > rwidth) {
         x = rwidth - rsize - 1;
     } else if (x < - (rwidth + xstep)) {
@@ -103,7 +103,7 @@ void TimerFunction(int value) {
         realX = x * hrate;
         realY = y * hrate;
     }
-    printf("realSize: %f----windowWidth: %f-----x: %f\n", realSize, windowWidth, x);
+    
     if (realX + realSize > windowWidth || realX < -windowWidth) {
         xstep = -xstep;
     }
