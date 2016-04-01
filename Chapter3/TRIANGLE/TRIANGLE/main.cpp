@@ -112,20 +112,21 @@ void RenderTriangleFan(GLfloat xTop, GLfloat yTop, GLfloat zTop) {
 void PreRendering() {
     // 清除窗口和深度缓冲区
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+    // 剔除操作，隐藏遮掩表面
     if (bCull) {
         glEnable(GL_CULL_FACE);
     } else {
         glDisable(GL_CULL_FACE);
     }
-    
-    if (!bDepth) {
+    // 由于后绘制的图元默认会叠加在先绘制的图元之上
+    // 开启深度测试可使近的遮挡住远的图元
+    if (bDepth) {
         glEnable(GL_DEPTH_TEST);
     } else {
         glDisable(GL_DEPTH_TEST);
     }
-    
-    if (!bOutline) {
+    // 如果开启，将背部绘制成多边形
+    if (bOutline) {
         glPolygonMode(GL_BACK, GL_LINE);
     } else {
         glPolygonMode(GL_BACK, GL_FILL);
